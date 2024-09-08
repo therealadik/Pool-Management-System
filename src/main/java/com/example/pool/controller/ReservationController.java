@@ -4,6 +4,7 @@ import com.example.pool.dto.CancelRequest;
 import com.example.pool.dto.ReservationRequest;
 import com.example.pool.model.Reservation;
 import com.example.pool.service.ReservationService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
+    @Operation(summary = "Get all occupied slots")
     @GetMapping("/all")
     public ResponseEntity<Map<LocalTime, Long>> getOccupiedSlots(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -29,6 +31,7 @@ public class ReservationController {
         return ResponseEntity.ok(occupiedSlots);
     }
 
+    @Operation(summary = "Get all available slots")
     @GetMapping("/available")
     public ResponseEntity<Map<LocalTime, Long>> getAvailableSlots(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -37,6 +40,7 @@ public class ReservationController {
         return ResponseEntity.ok(availableSlots);
     }
 
+    @Operation(summary = "Get slots by clientName")
     @GetMapping("/search/clientName")
     public ResponseEntity<List<Reservation>> getReservationsByClientName(@RequestParam String name){
         List<Reservation> reservations = reservationService.getReservationsByClientName(name);
@@ -44,6 +48,7 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
+    @Operation(summary = "Get slots by date")
     @GetMapping("/search/date")
     public ResponseEntity<List<Reservation>> getReservationsByDate(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
@@ -52,12 +57,14 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
+    @Operation(summary = "cancel slot by id")
     @PostMapping("/cancel")
     public ResponseEntity<Void> cancelReservation(@RequestBody CancelRequest request){
         reservationService.cancelReservation(request.getOrderId());
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "reserve slot")
     @PostMapping("/reserve")
     public ResponseEntity<Long> reserve(@RequestBody ReservationRequest request) {
 
