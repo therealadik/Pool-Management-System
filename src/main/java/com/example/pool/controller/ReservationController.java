@@ -1,5 +1,7 @@
 package com.example.pool.controller;
 
+import com.example.pool.dto.CancelRequest;
+import com.example.pool.dto.ReservationRequest;
 import com.example.pool.model.Reservation;
 import com.example.pool.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,6 +21,14 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
+    @GetMapping("/all")
+    public ResponseEntity<Map<LocalTime, Long>> getOccupiedSlots(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        var occupiedSlots = reservationService.getOccupiedSlots(date);
+        return ResponseEntity.ok(occupiedSlots);
+    }
+
     @GetMapping("/available")
     public ResponseEntity<Map<LocalTime, Long>> getAvailableSlots(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -27,14 +37,31 @@ public class ReservationController {
         return ResponseEntity.ok(availableSlots);
     }
 
-    @PostMapping("/reserve")
-    public ResponseEntity<Long> reserve(
-            @RequestParam Long clientId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)LocalDateTime dateTime) {
+    @GetMapping("/search/clientName")
+    public ResponseEntity<List<Reservation>> getReservationsByClientName(@RequestParam String name){
+        List<Reservation> reservations = reservationService.getReservationsByClientName(name);
 
-        long reserveId = reservationService.createReservation(clientId, dateTime);
-        return ResponseEntity.ok(reserveId);
+        return ResponseEntity.ok(reservations);
     }
 
+    @GetMapping("/search/date")
+    public ResponseEntity<List<Reservation>> getReservationsByDate(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+        List<Reservation> reservations = reservationService.getReservationsByDate(date);
 
+        return ResponseEntity.ok(reservations);
+    }
+
+    @PostMapping("/cancel")
+    public ResponseEntity<Void> cancelReservation(@RequestBody CancelRequest request){
+        reservationService.cancelReservation(request.getOrderId());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reserve")
+    public ResponseEntity<Long> reserve(@RequestBody ReservationRequest request) {
+
+        long reserveId = reservationService.createReservation(request.getClientId(), request.getDatetime());
+        return ResponseEntity.ok(reserveId);
+    }
 }

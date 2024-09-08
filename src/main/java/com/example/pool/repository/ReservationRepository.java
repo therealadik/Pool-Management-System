@@ -10,5 +10,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByReservationTimeBetween(LocalDateTime startTime, LocalDateTime endTime);
     List<Reservation> findByClientName(String clientName);
     int countByClientIdAndReservationTimeBetween(Long clientId, LocalDateTime startTime, LocalDateTime endTime);
-    List<Reservation> countByReservationTime(LocalDateTime reservationTime);
+    List<Reservation> findByReservationTime(LocalDateTime reservationTime);
 }

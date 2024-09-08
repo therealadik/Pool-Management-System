@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class Reservation {
 
     public static final int MAX_RESERVATIONS_PER_HOUR = 10;
-    private static final int RESERVATION_HOUR_DURATION = 1;
+    public static final int RESERVATION_HOUR_DURATION = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
