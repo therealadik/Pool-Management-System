@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "Bassein System API",
+                title = "API pool schedule",
                 description = "Shedule", version = "1.0.0",
                 contact = @Contact(
                         name = "Ermolaev Vladislav",

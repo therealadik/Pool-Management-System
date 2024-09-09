@@ -32,14 +32,14 @@ public class ClientController {
         return ResponseEntity.ok(clients);
     }
 
-    @Operation(summary = "add client")
+    @Operation(summary = "Add client")
     @PostMapping("/add")
     public ResponseEntity<Void> addClient(@RequestBody Client client) {
         Client newClient = clientService.createClient(client);
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "update client")
+    @Operation(summary = "Update client")
     @PostMapping("/update")
     public ResponseEntity<Void> updateClient(@RequestBody Client client) {
         clientService.updateClient(client);
